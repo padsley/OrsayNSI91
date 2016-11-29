@@ -1,0 +1,1 @@
+This directory should contain the sorted files once they have been created. For each raw file, there should be two sorted files, one with "OLD" in the title, signifying that this file contains the data stored in the older format.
