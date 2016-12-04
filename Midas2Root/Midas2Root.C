@@ -13,8 +13,8 @@ using namespace std;
 #include <TSystem.h>
 
 // NPLib headers
-#include "/home/padsley/codes/nptool/NPLib/include/TW1Data.h"
-#include "/home/padsley/codes/nptool/NPLib/include/TSplitPoleData.h"
+// #include "/home/padsley/codes/nptool/NPLib/include/TW1Data.h"
+// #include "/home/padsley/codes/nptool/NPLib/include/TSplitPoleData.h"
 
 
 void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kOld = false)
@@ -24,6 +24,11 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
    //gSystem->Load("/home/padsley/codes/nptool/NPLib/lib/libNPW1.so");
    //gSystem->Load("/home/padsley/codes/nptool/NPLib/lib/libNPSplitPole.so");
    //gROOT->ProcessLine(".L /home/padsley/codes/nptool/NPLib/Detectors/W1/TW1Data.cxx+");
+   
+//    cout << dirin << endl;
+//    cout << dirout << endl;
+//    cout << "Run: " << run << endl;
+//    cout << "Section: " << section << endl;
    
    // build input and output file names
    TString f_in  = Form("%sR%d_%d",      dirin.Data(),  run, section);
@@ -36,9 +41,9 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
      {
        f_out = Form("%sR%d_%d.root", dirout.Data(), run, section);
      }
-   // cout << "formatted names" << endl;
-   f_in;
-   f_out;
+   cout << "formatted names" << endl;
+   cout << f_in << endl;
+   cout << f_out << endl;
    
    // declare variables
    // general
@@ -63,11 +68,11 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
    // general
    tout->Branch("RunNumber", &runNum, "RunNumber/I");
    // dsssd
-   TW1Data *fW1Data = new TW1Data();
-   tout->Branch("W1", "TW1Data", &fW1Data);
+//    TW1Data *fW1Data = new TW1Data();
+//    tout->Branch("W1", "TW1Data", &fW1Data);
    // sp
-   TSplitPoleData *fSplitPoleData = new TSplitPoleData();
-   tout->Branch("SplitPole", "TSplitPoleData", &fSplitPoleData);
+//    TSplitPoleData *fSplitPoleData = new TSplitPoleData();
+//    tout->Branch("SplitPole", "TSplitPoleData", &fSplitPoleData);
 
    if (kOld) {
       tout->Branch("evtNum",&evtNum,"evtNum/I");
@@ -100,12 +105,14 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
    blocks = 0;
    events = 0;
 
+   cout << "Loop over the data" << endl;
+   
    // read data file
    while (!fin.eof()) {
       if (fin.read(bytesPtr, nWdChar)) {
          blocks++;
          half = (Short_t *)bytesPtr;
-
+//         cout << blocks << endl;
          for (Int_t j = 0;  j < 4; j++)        half[j] = Rbswap_16(half[j]);
          for (Int_t j = 13; j < nWdInt*2; j++) half[j] = Rbswap_16(half[j]);
 
@@ -122,8 +129,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 
             if (evt_len > 0) {
                // reset values
-               fW1Data->Clear();
-               fSplitPoleData->Clear();
+//                fW1Data->Clear();
+//                fSplitPoleData->Clear();
 
                scalarN = 0;
                evtNum=0;
@@ -172,19 +179,19 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 
                         if (group < 7) {  // dsssd case
                            if (item < 16) {  // p side (front)
-                              fW1Data->SetFrontE(group, item, *half);
+//                               fW1Data->SetFrontE(group, item, *half);
                            }
                            else {   // n side (back)
-                              fW1Data->SetBackE(group, item%16, *half);
+//                               fW1Data->SetBackE(group, item%16, *half);
                            }
 //			   cout << group << "\t" << item << "\t" << *half << endl;
                         }
                         else {   // sp case
-                           if (address == 196) fSplitPoleData->SetPosition(*half);
-                           if (address == 194) fSplitPoleData->SetDeltaE(*half);
-                           if (address == 193) fSplitPoleData->SetWire(*half);
-                           if (address == 192) fSplitPoleData->SetPlasticP(*half);
-                           if (address == 195) fSplitPoleData->SetPlasticG(*half);
+//                            if (address == 196) fSplitPoleData->SetPosition(*half);
+//                            if (address == 194) fSplitPoleData->SetDeltaE(*half);
+//                            if (address == 193) fSplitPoleData->SetWire(*half);
+//                            if (address == 192) fSplitPoleData->SetPlasticP(*half);
+//                            if (address == 195) fSplitPoleData->SetPlasticG(*half);
                         }
 
                      }
@@ -199,16 +206,16 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
                         Int_t det   = address/16 + 1;
                         Int_t strip = address%16;
                         if (address < 96) {  // p-side (front)
-                           fW1Data->SetFrontT(det, strip, *half);
+//                            fW1Data->SetFrontT(det, strip, *half);
                         }
                         else {   // n-side (back)
-                           fW1Data->SetBackT(det-6, strip, *half);   // only D1 has timing for back signals
+//                            fW1Data->SetBackT(det-6, strip, *half);   // only D1 has timing for back signals
                         }
                      }
 
                      // SP
-                     if (address == 117) fSplitPoleData->SetTime1(*half);
-                     if (address == 126) fSplitPoleData->SetTime2(*half);
+//                      if (address == 117) fSplitPoleData->SetTime1(*half);
+//                      if (address == 126) fSplitPoleData->SetTime2(*half);
 
                      tdcList[tdcN] = address;
                      tdcData[tdcN] = *half;
@@ -230,7 +237,7 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
                         scalar[i] += (*half) * 65536;
                         if (i == 2) {
                            scalarN = scalar[i];
-                           fSplitPoleData->SetTick(scalar[i]);
+//                            fSplitPoleData->SetTick(scalar[i]);
                         }
                         half++;
                      }

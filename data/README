@@ -1,1 +1,3 @@
-Put the raw MIDAS data files into this directory
+Put the raw MIDAS data files into this directory - they need to be uncompressed!
+
+Run 'gunzip *.gz' to do this.
