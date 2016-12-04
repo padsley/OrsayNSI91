@@ -52,7 +52,7 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
    Int_t adcN, tdcN, scalarN;
    UShort_t adcList[512], tdcList[512], adcData[512], tdcData[512];
    // scaler
-   Int_t scalar[32];
+   Int_t scalar[32], tick;
    // split-pole
    UShort_t SPpos, SPde, SPwire, SPplasp, SPplasg;
 
@@ -90,6 +90,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
       tout->Branch("SPwire",&SPwire,"SPwire/s");
       tout->Branch("SPplasp",&SPplasp,"SPplasp/s");
       tout->Branch("SPplasg",&SPplasg,"SPplasg/s");
+      
+      tout->Branch("tick",&tick,"tick/I");
    }
 
    const Int_t blkSize = 16384;
@@ -143,6 +145,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
                SPplasp = 0;
                SPplasg = 0;
 
+               tick = 0;
+               
                for (Int_t i = 0; i < 32; ++i) {
                   scalar[i] = 0;
                }
@@ -238,6 +242,7 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
                         if (i == 2) {
                            scalarN = scalar[i];
 //                            fSplitPoleData->SetTick(scalar[i]);
+                           tick = scalar[i];
                         }
                         half++;
                      }
