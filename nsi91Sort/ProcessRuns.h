@@ -130,6 +130,7 @@ ProcessRuns::ProcessRuns(TTree *tree) : fChain(0)
       for(unsigned int i=0;i<ListOfRuns.size();i++)
       {
             chain->Add(FilesOfRuns.at(i).c_str());
+            printf("%s\n",FilesOfRuns.at(i).c_str());
       }
       
 //       chain->Add("../sorted/R1_0_old.root/EGTree");

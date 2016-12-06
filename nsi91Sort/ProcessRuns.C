@@ -37,7 +37,7 @@ void ProcessRuns::Loop()
     
     Long64_t nentries = fChain->GetEntriesFast();
     
-    TFile *fout = new TFile("../processed/output.root");
+    TFile *fout = new TFile("../processed/output.root","RECREATE");
     TTree *trout = new TTree("DATA","DATA");
     
     //Make branches here
