@@ -175,11 +175,11 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
                         adcData[adcN] = *half;
 
                         // sp
-                        if (adcList[adcN] == 196) SPpos   = *half;
-                        if (adcList[adcN] == 194) SPde    = *half;
-                        if (adcList[adcN] == 193) SPwire  = *half;
-                        if (adcList[adcN] == 192) SPplasp = *half;
-                        if (adcList[adcN] == 195) SPplasg = *half;
+                        if (adcList[adcN] == 192) SPpos   = *half;
+                        if (adcList[adcN] == 193) SPde    = *half;
+                        if (adcList[adcN] == 194) SPwire  = *half;
+                        if (adcList[adcN] == 195) SPplasp = *half;
+                        if (adcList[adcN] == 196) SPplasg = *half;
 
                         if (group < 7) {  // dsssd case
                            if (item < 16) {  // p side (front)
