@@ -9,6 +9,7 @@ for i in `find . -name 'R*.gz'`
 do
 #echo $i
 j=${i%_*}
+j=$j"_0"
 #echo $j
 if [ ! -e $j ]
 then
