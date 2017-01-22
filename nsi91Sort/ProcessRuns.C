@@ -186,7 +186,7 @@ void ProcessRuns::Loop()
         
         SiliconRecoilPhi = 0;
         SiliconRecoilTheta = 0;
-        Qvalue = 0;
+        //Qvalue = 0;
         
         TimeDifference.clear();
         TimeDifference2.clear();
@@ -199,12 +199,12 @@ void ProcessRuns::Loop()
         {
             if(tdcList[i] == 126) //One focal-plane timing value
             {
-                if(FPTime = -1)FPTime = tdcData[i];
+                if(FPTime == -1)FPTime = tdcData[i];
                 else printf("Error1\n");
             }
             if(tdcList[i] == 117) //The **other** FP timing value
             {
-                if(FPOtherTime = -1)FPOtherTime = tdcData[i];
+                if(FPOtherTime == -1)FPOtherTime = tdcData[i];
                 else printf("Error2\n");
             }
         }
@@ -304,7 +304,7 @@ void ProcessRuns::Loop()
                                             SiliconPhi.push_back(VectorToSiliconHit.Phi());
                                             SiliconPath.push_back(VectorToSiliconHit.Mag());
                                             
-                                            CoincidenceQValue.push_back(KinematicsToQValue(Brho,EnergyPside,3.72840129745092099e+03,VectorToSiliconHit));
+                                            CoincidenceQValue.push_back(KinematicsToQValue(Brho,EnergyPside,938.782980,VectorToSiliconHit));
                                             
                                             SiliconCMTheta.push_back(SiliconRecoilTheta);
                                             SiliconCMPhi.push_back(SiliconRecoilPhi);

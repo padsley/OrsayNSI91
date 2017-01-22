@@ -275,25 +275,41 @@ double GetBField(double fAbsoluteTick, TGraph *graphy)
 
 double BrhoToEx(double Brho)
 {
-    double m_proton = 938.782980; //MeV/c/c
-    double m_19F = 17697.01255; //MeV/c/c
-    double T1 = 15.000; //MeV
+  //double m_proton = 938.782980; //MeV/c/c
+  double m_triton = 2809.431833; //MeV/c/c
+  double m_3He = 2809.413242; //MeV/c/c
+  //    double m_31P = 28851.87339; //MeV/c/c
+    double m_31S = 28857.2696; //MeV/c/c
+    double T1 = 25.000; //MeV
  
+    TVector3 p1vec(0,0,1);
+    p1vec.SetMag(sqrt(T1*(T1 + 2*m_3He)));
  
     double p3 = TMath::C()/1e6 * Brho;
-    double T3 = sqrt(p3*p3 + m_proton*m_proton) - m_proton;
+    double T3 = sqrt(p3*p3 + m_triton*m_triton) - m_triton;
     
-    double theta = 40.0 * TMath::Pi()/180.;//convert deg->rad
+    double theta = 10.0 * TMath::Pi()/180.;//convert deg->rad
     
-    double r = sqrt(m_proton*m_proton*T1)/(m_proton+m_19F) * cos(theta);
+    TVector3 p3vec(0,0,1);
+    p3vec.SetTheta(theta);
+    p3vec.SetMag(p3);
+
+    TVector3 p4vec = p1vec - p3vec;
+
+    double T4 = sqrt(p4vec.Mag2() + m_31S*m_31S) - m_31S;
+
+    //double r = sqrt(m_proton*m_proton*T1)/(m_proton+m_19F) * cos(theta);
     
-    double s = T3 - 2*r*sqrt(T3);
+    //double s = T3 - 2*r*sqrt(T3);
     
-    double result = (T1*(m_19F - m_proton) - s*(m_19F+m_proton))/m_19F;
+    //double result = (T1*(m_19F - m_proton) - s*(m_19F+m_proton))/m_19F;
+
+    double result = T1 - T3 - T4 - 5.4148;
+    //cout << "Ex: " << Ex << endl;
     return result;
 }
 
-double SiliconRecoilTheta = 0, SiliconRecoilPhi = 0, Qvalue = 0;
+double SiliconRecoilTheta = 0, SiliconRecoilPhi = 0;
 
 double KinematicsToQValue(double Brho, double SiliconEnergy, double SiliconMass = 938.782980, TVector3 VectorToSiliconHit = TVector3(0,0,-1))
 {
@@ -306,27 +322,31 @@ double KinematicsToQValue(double Brho, double SiliconEnergy, double SiliconMass 
     cout << "Ex: " << Ex << endl;
     
     double m_proton = 938.782980; //MeV/c/c
-    double m_19F = 17697.043014; //MeV/c/c
-    double m_15N = 13972.62543805; //MeV/c/c
-    double m_4He = 3728.43131565; //MeV/c/c
+    double m_31S = 28857.2696; //MeV/c/c
+    double m_30P = 27924.6197; //MeV/c/c
+    //double m_4He = 3728.43131565; //MeV/c/c
+
+    double m_triton = 2809.431833; //MeV/c/c
+    double m_3He = 2809.413242; //MeV/c/c
+    //double m_31P = 28851.87339; //MeV/c/c
+    double T1 = 25.000; //MeV
     
-    double m_19F_Ex = m_19F + Ex;
+    //double m_31S_Ex = m_31S + Ex;
     
     double scalerp3 = TMath::C()/1e6 * Brho;
-    double T3 = sqrt(scalerp3*scalerp3 + m_proton*m_proton) - m_proton;
+    double T3 = sqrt(scalerp3*scalerp3 + m_triton*m_triton) - m_triton;
     cout << "T3: " << T3 << endl;
-    double T1 = 15.000; //MeV
     
     double TRecoil = T1 - Ex - T3;
     cout << "Recoil Kinetic Energy: " << TRecoil << endl;
     
-    double theta = 40.0 * TMath::Pi()/180.;//convert deg->rad
+    double theta = 10.0 * TMath::Pi()/180.;//convert deg->rad
     
     TVector3 result(0,0,1);
     TLorentzVector ProperResult;
     
-    TVector3 p1(0.,0.,sqrt(T1*(T1+2*m_proton)));
-    cout << "Ebeam: " << sqrt(p1.Mag2() + m_proton*m_proton) - m_proton << " MeV" << endl;
+    TVector3 p1(0.,0.,sqrt(T1*(T1+2*m_3He)));
+    cout << "Ebeam: " << sqrt(p1.Mag2() + m_3He*m_3He) - m_3He << " MeV" << endl;
     
     TVector3 p2(0.,0.,0.);
     
@@ -336,7 +356,7 @@ double KinematicsToQValue(double Brho, double SiliconEnergy, double SiliconMass 
     p3.Print();
     
     TVector3 p4 = p1 - p3;
-    cout << "T4: " << sqrt(p4.Mag2() + m_19F*m_19F) - m_19F << " MeV" << endl;
+    cout << "T4: " << sqrt(p4.Mag2() + m_31S*m_31S) - m_31S << " MeV" << endl;
     p4.Print();
     
     
@@ -351,10 +371,10 @@ double KinematicsToQValue(double Brho, double SiliconEnergy, double SiliconMass 
     LightDecayParticle3Momentum.Print();
     
     TVector3 HeavyDecayParticle3Momentum = p4 - LightDecayParticle3Momentum;
-    cout << "HDP KE: " << sqrt(HeavyDecayParticle3Momentum.Mag2() + m_15N*m_15N) - m_15N << " MeV" << endl;
+    cout << "HDP KE: " << sqrt(HeavyDecayParticle3Momentum.Mag2() + m_30P*m_30P) - m_30P << " MeV" << endl;
     HeavyDecayParticle3Momentum.Print();
     
-    double Qvalue = T1 - T3 - (sqrt(LightDecayParticle3Momentum.Mag2() + SiliconMass*SiliconMass) - SiliconMass) - (sqrt(HeavyDecayParticle3Momentum.Mag2() + m_15N*m_15N) - m_15N);
+    double Qvalue = T1 - T3 - (sqrt(LightDecayParticle3Momentum.Mag2() + SiliconMass*SiliconMass) - SiliconMass) - (sqrt(HeavyDecayParticle3Momentum.Mag2() + m_30P*m_30P) - m_30P);
     
     (p1 - p3 - LightDecayParticle3Momentum - HeavyDecayParticle3Momentum).Print();
     
