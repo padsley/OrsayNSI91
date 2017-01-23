@@ -60,7 +60,29 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
   // open data file
   ifstream fin(f_in,ifstream::binary);
 
-  // open output ROOT file
+ 
+
+  const Int_t blkSize = 16384;
+  const Int_t nWdChar = blkSize / sizeof(Char_t);
+  const Int_t nWdInt = blkSize / sizeof(Int_t);
+  Char_t bytes[blkSize];
+  Char_t *bytesPtr = bytes;
+
+  Int_t   blocks, events, evt_len;
+  Short_t group, item, address, *end_event;
+  Short_t *half, *end_block, end_data;
+
+  blocks = 0;
+  events = 0;
+
+  cout << "Loop over the data" << endl;
+   
+  // read data file
+  struct stat buffer;
+  //if(stat(f_in.Data(), &buffer) ==0)
+  if(fin.is_open())
+  {
+	   // open output ROOT file
   TFile *fout = new TFile(f_out,"recreate");
   // create output TTree
   TTree *tout = new TTree("EGTree","EG Tree");
@@ -94,27 +116,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
       
     tout->Branch("tick",&tick,"tick/I");
   }
-
-  const Int_t blkSize = 16384;
-  const Int_t nWdChar = blkSize / sizeof(Char_t);
-  const Int_t nWdInt = blkSize / sizeof(Int_t);
-  Char_t bytes[blkSize];
-  Char_t *bytesPtr = bytes;
-
-  Int_t   blocks, events, evt_len;
-  Short_t group, item, address, *end_event;
-  Short_t *half, *end_block, end_data;
-
-  blocks = 0;
-  events = 0;
-
-  cout << "Loop over the data" << endl;
-   
-  // read data file
-  struct stat buffer;
-  //if(stat(f_in.Data(), &buffer) ==0)
-  if(fin.is_open())
-  {
+	  
+	  
     while (!fin.eof()) {
       if (fin.read(bytesPtr, nWdChar)) {
 	blocks++;
