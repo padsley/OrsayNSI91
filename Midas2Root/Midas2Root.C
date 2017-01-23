@@ -277,14 +277,15 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 	}
       }
     }
-  }
-
-  cout << "\r----------------------Processed All Blocks-----------------------" << endl;
+	    cout << "\r----------------------Processed All Blocks-----------------------" << endl;
   cout << "blocks " << blocks << endl;
 
   tout->Write();
   fout->Close();
-  fin.close();
+ 
+  }
+
+ fin.close();
 
   //   gROOT->ProcessLine(".q");
 }
