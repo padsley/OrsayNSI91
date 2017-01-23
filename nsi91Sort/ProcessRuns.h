@@ -396,13 +396,16 @@ TVector3 SiliconFlightPath(int DetNumRaw, int pStrip, int nStrip)
     TVector3 yprime(0,1,0);
     TVector3 zprime(0,0,1);
     
+    double phiCentre = TMath::Pi()/2.; //Set the default value to something which is defo wrong
+
     if(DetectorNumber==1 || DetectorNumber==2)
     {
         DetectorCentre.SetMag(110.0);//In mm
         double thetaCentre = 180-67;
         thetaCentre *= TMath::Pi()/180.;
         DetectorCentre.SetTheta(thetaCentre);
-        DetectorCentre.SetPhi(0);
+        DetectorCentre.SetPhi(TMath::Pi());
+	phiCentre = TMath::Pi();
     }
     else if(DetectorNumber==3 || DetectorNumber==4)
     {
@@ -410,7 +413,8 @@ TVector3 SiliconFlightPath(int DetNumRaw, int pStrip, int nStrip)
         double thetaCentre = 180-24;
         thetaCentre *= TMath::Pi()/180.;
         DetectorCentre.SetTheta(thetaCentre);
-        DetectorCentre.SetPhi(0);
+        DetectorCentre.SetPhi(TMath::Pi());
+	phiCentre = TMath::Pi();
     }
     else if(DetectorNumber==5 || DetectorNumber==6)
     {
@@ -418,7 +422,8 @@ TVector3 SiliconFlightPath(int DetNumRaw, int pStrip, int nStrip)
         double thetaCentre = 180-45;
         thetaCentre *= TMath::Pi()/180.;
         DetectorCentre.SetTheta(thetaCentre);
-        DetectorCentre.SetPhi(TMath::Pi());
+        DetectorCentre.SetPhi(0);
+	phiCentre = 0;
     }
     if(DetectorNumber%2==1)//Odd-numbered detctors are at the bottom
     {
@@ -434,22 +439,22 @@ TVector3 SiliconFlightPath(int DetNumRaw, int pStrip, int nStrip)
     result = DetectorCentre;
     xprime.SetX(cos(DetectorCentre.Theta()));
     xprime.SetY(0);
-    xprime.SetZ(-1.*sin(DetectorCentre.Theta()));
+    xprime.SetZ(-1.*sin(DetectorCentre.Theta())*cos(phiCentre));
     
-    zprime.SetX(sin(DetectorCentre.Theta()));
+    zprime.SetX(sin(DetectorCentre.Theta())*cos(phiCentre));
     zprime.SetY(0);
     zprime.SetZ(cos(DetectorCentre.Theta()));
     
     if(DetectorNumber>=1 && DetectorNumber<=4)
     {
         result -= yprime*(3.1*(pStrip - 7) + (pStrip - pStrip%8)/8*1.5);
-        result -= xprime*3.1*(nStrip-7);
+        result += xprime*3.1*(nStrip-7);
 //         result += zprime*3.1*(nStrip-7);
     }
     if(DetectorNumber==5 || DetectorNumber==6)
     {
         result += yprime*(3.1*(pStrip - 7) + (pStrip - pStrip%8)/8*1.5);
-        result += xprime*3.1*(nStrip-7);
+        result -= xprime*3.1*(nStrip-7);
 //         result -= zprime*3.1*(nStrip-7);
     }
     return result;
