@@ -57,10 +57,15 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
   // split-pole
   UShort_t SPpos, SPde, SPwire, SPplasp, SPplasg;
 
+  short SPposFromTime;
+
+  short SPposStart, SPposStop;
+
+
   // open data file
   ifstream fin(f_in,ifstream::binary);
 
- 
+  
 
   const Int_t blkSize = 16384;
   const Int_t nWdChar = blkSize / sizeof(Char_t);
@@ -115,6 +120,12 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
     tout->Branch("SPplasg",&SPplasg,"SPplasg/s");
       
     tout->Branch("tick",&tick,"tick/I");
+
+    tout->Branch("SPposStart",&SPposStart,"SPposStart/s");
+    tout->Branch("SPposStop",&SPposStop,"SPposStop/s");
+
+    tout->Branch("SPposFromTime",&SPposFromTime,"SPposFromTime/s");
+
   }
 	  
 	  
@@ -152,6 +163,10 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 	    SPwire = 0;
 	    SPplasp = 0;
 	    SPplasg = 0;
+
+	    SPposFromTime = 0;
+	    SPposStop = 0;
+	    SPposStart = 0;
 
 	    tick = 0;
                
@@ -235,6 +250,12 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 		if (address == 126 && *half < 800) {
 		  //                        cout << tdcN << "\t" << group << "\t" << item << "\t" << address << "\t" << *half << "\t" << fSplitPoleData->GetTime2() << endl;
 		}
+
+		if(address==113 && SPposStop!=0)cout << "ACHTUNG! SPposStop" << endl;
+		if(address==114 && SPposStart!=0)cout << "ACHTUNG! SPposStart" << endl;
+
+		if(address==113)SPposStop = *half;
+		if(address==114)SPposStart = *half;
 		++tdcN;
 	      }
 
