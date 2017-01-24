@@ -285,6 +285,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 	      ++half;
 	    }
 
+            SPposFromTime = SPposStop - SPposStart;
+		  
 	    events++;
 	    evtNum = events-1;
 	    tout->Fill();
