@@ -200,30 +200,34 @@ void ProcessRuns::Loop()
             if(tdcList[i] == 126) //One focal-plane timing value
             {
                 if(FPTime == -1)FPTime = tdcData[i];
-                else printf("Error1\n");
+                //else printf("Error1\n");
             }
             if(tdcList[i] == 117) //The **other** FP timing value
             {
                 if(FPOtherTime == -1)FPOtherTime = tdcData[i];
-                else printf("Error2\n");
+                //else printf("Error2\n");
             }
         }
         
         for(int i=0;i<adcN;i++)
         {
-            if(adcList[i]==194) //deltaE
+            if(adcList[i]==193) //deltaE
             {
                 deltaE = adcData[i];
             }
-            if(adcList[i]==193) //Wire
+            if(adcList[i]==194) //Wire
             {
                 wire = adcData[i];
             }
-            if(adcList[i]==195) //Plastic at large Brho
+            if(adcList[i]==196) //Plastic at large Brho
             {
                 plasG = adcData[i];
             }
-            if(adcList[i]==196) //Position
+	    if(adcList[i]==195)
+	      {
+		//	plasP = adcData[i];
+	      }
+            if(adcList[i]==192) //Position
             {
                 position = adcData[i];
                 rho = 0.62126 + 4.06966e-5 * position; // position->rho

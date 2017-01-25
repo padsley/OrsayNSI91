@@ -13,6 +13,8 @@ using namespace std;
 #include <TSystem.h>
 #include <sys/stat.h>
 
+#include <../alpha_calibration/W1Calibs.h>
+
 // NPLib headers
 // #include "/home/padsley/codes/nptool/NPLib/include/TW1Data.h"
 // #include "/home/padsley/codes/nptool/NPLib/include/TSplitPoleData.h"
@@ -52,6 +54,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
   // dsssd
   Int_t adcN, tdcN, scalarN;
   UShort_t adcList[512], tdcList[512], adcData[512], tdcData[512];
+  int tdcMult[256];
+  double energy[512];
   // scaler
   Int_t scalar[32], tick;
   // split-pole
@@ -113,6 +117,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
     tout->Branch("tdcList",tdcList,"tdcList[tdcN]/s");
     tout->Branch("tdcData",tdcData,"tdcData[tdcN]/s");
 
+    tout->Branch("energy",energy,"energy[adcN]/D");
+
     tout->Branch("SPpos",&SPpos,"SPpos/s");
     tout->Branch("SPde",&SPde,"SPde/s");
     tout->Branch("SPwire",&SPwire,"SPwire/s");
@@ -123,6 +129,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 
     tout->Branch("SPposStart",&SPposStart,"SPposStart/s");
     tout->Branch("SPposStop",&SPposStop,"SPposStop/s");
+
+    tout->Branch("tdcMult",&tdcMult,"tdcMult/I");
 
     tout->Branch("SPposFromTime",&SPposFromTime,"SPposFromTime/s");
 
@@ -168,6 +176,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 	    SPposStop = 0;
 	    SPposStart = 0;
 
+	    for(int kk=0;kk<256;kk++)tdcMult[kk]=0;
+
 	    tick = 0;
                
 	    for (Int_t i = 0; i < 32; ++i) {
@@ -196,6 +206,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 		  // dsssd
 		  adcList[adcN] = address;
 		  adcData[adcN] = *half;
+
+		  energy[adcN] = CalibPars[adcList[adcN]][0] + CalibPars[adcList[adcN]][1] * adcData[adcN];
 
 		  // sp
 		  if (adcList[adcN] == 192) SPpos   = *half;
@@ -246,6 +258,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 
 		tdcList[tdcN] = address;
 		tdcData[tdcN] = *half;
+
+		tdcMult[address]++;
 
 		if (address == 126 && *half < 800) {
 		  //                        cout << tdcN << "\t" << group << "\t" << item << "\t" << address << "\t" << *half << "\t" << fSplitPoleData->GetTime2() << endl;

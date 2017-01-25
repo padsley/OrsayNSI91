@@ -23,7 +23,7 @@
 #include <TMath.h>
 #include <TVector3.h>
 #include <TLorentzVector.h>
-#include <CalibPars.h>
+#include <W1Calibs.h>
 
 // Header file for the classes stored in the TTree if any.
 
@@ -313,13 +313,13 @@ double SiliconRecoilTheta = 0, SiliconRecoilPhi = 0;
 
 double KinematicsToQValue(double Brho, double SiliconEnergy, double SiliconMass = 938.782980, TVector3 VectorToSiliconHit = TVector3(0,0,-1))
 {
-    cout << endl << endl;
+  // cout << endl << endl;
     
-    cout << "Brho in kinematics loop: " << Brho << endl;
+    //    cout << "Brho in kinematics loop: " << Brho << endl;
     
     double Ex = BrhoToEx(Brho);
     
-    cout << "Ex: " << Ex << endl;
+    //cout << "Ex: " << Ex << endl;
     
     double m_proton = 938.782980; //MeV/c/c
     double m_31S = 28857.2696; //MeV/c/c
@@ -335,10 +335,10 @@ double KinematicsToQValue(double Brho, double SiliconEnergy, double SiliconMass 
     
     double scalerp3 = TMath::C()/1e6 * Brho;
     double T3 = sqrt(scalerp3*scalerp3 + m_triton*m_triton) - m_triton;
-    cout << "T3: " << T3 << endl;
+    //cout << "T3: " << T3 << endl;
     
     double TRecoil = T1 - Ex - T3;
-    cout << "Recoil Kinetic Energy: " << TRecoil << endl;
+    //cout << "Recoil Kinetic Energy: " << TRecoil << endl;
     
     double theta = 10.0 * TMath::Pi()/180.;//convert deg->rad
     
@@ -346,39 +346,39 @@ double KinematicsToQValue(double Brho, double SiliconEnergy, double SiliconMass 
     TLorentzVector ProperResult;
     
     TVector3 p1(0.,0.,sqrt(T1*(T1+2*m_3He)));
-    cout << "Ebeam: " << sqrt(p1.Mag2() + m_3He*m_3He) - m_3He << " MeV" << endl;
+    //cout << "Ebeam: " << sqrt(p1.Mag2() + m_3He*m_3He) - m_3He << " MeV" << endl;
     
     TVector3 p2(0.,0.,0.);
     
     TVector3 p3(scalerp3*sin(theta),scalerp3*sin(theta)*sin(TMath::Pi()),scalerp3*cos(theta));
     p3.SetPhi(TMath::Pi());
-    cout << "T3: " << sqrt(p3.Mag2() + m_proton*m_proton) - m_proton << " MeV" << endl;
-    p3.Print();
+    //cout << "T3: " << sqrt(p3.Mag2() + m_proton*m_proton) - m_proton << " MeV" << endl;
+    //p3.Print();
     
     TVector3 p4 = p1 - p3;
-    cout << "T4: " << sqrt(p4.Mag2() + m_31S*m_31S) - m_31S << " MeV" << endl;
-    p4.Print();
+    //cout << "T4: " << sqrt(p4.Mag2() + m_31S*m_31S) - m_31S << " MeV" << endl;
+    //p4.Print();
     
     
     double LDPmomentum = sqrt(SiliconEnergy*(SiliconEnergy + 2*SiliconMass));
     double thetaLDP = (VectorToSiliconHit.Theta());
-    cout << "thetaLDP: " << thetaLDP << endl;
+    //cout << "thetaLDP: " << thetaLDP << endl;
     double phiLDP = (VectorToSiliconHit.Phi());
-    cout << "phiLDP: " << phiLDP << endl;
+    //cout << "phiLDP: " << phiLDP << endl;
     
     TVector3 LightDecayParticle3Momentum(LDPmomentum*sin(thetaLDP)*cos(phiLDP),LDPmomentum*sin(thetaLDP)*sin(phiLDP),LDPmomentum*cos(thetaLDP));
-    cout << "LDP KE: " << sqrt(LightDecayParticle3Momentum.Mag2() + SiliconMass*SiliconMass) - SiliconMass << " MeV" << endl;
-    LightDecayParticle3Momentum.Print();
+    //cout << "LDP KE: " << sqrt(LightDecayParticle3Momentum.Mag2() + SiliconMass*SiliconMass) - SiliconMass << " MeV" << endl;
+    //LightDecayParticle3Momentum.Print();
     
     TVector3 HeavyDecayParticle3Momentum = p4 - LightDecayParticle3Momentum;
-    cout << "HDP KE: " << sqrt(HeavyDecayParticle3Momentum.Mag2() + m_30P*m_30P) - m_30P << " MeV" << endl;
-    HeavyDecayParticle3Momentum.Print();
+    //cout << "HDP KE: " << sqrt(HeavyDecayParticle3Momentum.Mag2() + m_30P*m_30P) - m_30P << " MeV" << endl;
+    //HeavyDecayParticle3Momentum.Print();
     
     double Qvalue = T1 - T3 - (sqrt(LightDecayParticle3Momentum.Mag2() + SiliconMass*SiliconMass) - SiliconMass) - (sqrt(HeavyDecayParticle3Momentum.Mag2() + m_30P*m_30P) - m_30P);
     
-    (p1 - p3 - LightDecayParticle3Momentum - HeavyDecayParticle3Momentum).Print();
+    //(p1 - p3 - LightDecayParticle3Momentum - HeavyDecayParticle3Momentum).Print();
     
-    cout << "Qvalue: " << Qvalue << endl;
+    //cout << "Qvalue: " << Qvalue << endl;
     
     return Qvalue;
 }
