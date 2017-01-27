@@ -130,7 +130,7 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
     tout->Branch("SPposStart",&SPposStart,"SPposStart/s");
     tout->Branch("SPposStop",&SPposStop,"SPposStop/s");
 
-    tout->Branch("tdcMult",&tdcMult,"tdcMult/I");
+    tout->Branch("tdcMult",&tdcMult,"tdcMult[256]/I");
 
     tout->Branch("SPposFromTime",&SPposFromTime,"SPposFromTime/s");
 
@@ -301,6 +301,8 @@ void Midas2Root(TString dirin, TString dirout, Int_t run, int section, Bool_t kO
 
             SPposFromTime = SPposStop - SPposStart;
 		  
+	    //cout << "address: " << address << "\t tdcMult[address]: " << tdcMult[address] << endl;
+
 	    events++;
 	    evtNum = events-1;
 	    tout->Fill();

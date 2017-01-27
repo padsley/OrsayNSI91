@@ -35,6 +35,8 @@ void ProcessRuns::Loop()
     //by  b_branchname->GetEntry(ientry); //read only this branch
     if (fChain == 0) return;
     
+    ReadTimeTable();
+
     Long64_t nentries = fChain->GetEntriesFast();
     
     TFile *fout = new TFile("../processed/output.root","RECREATE");
@@ -355,12 +357,13 @@ void ReadTimeTable()
         // fill maps
         m_TimeTable[run_midas] = ptime;
         m_NarvalMidasTable[run_narval] = run_midas;
-        //       cout << "Narval: " << run_narval << " Midas: " << run_midas << endl;
+              cout << "Narval: " << run_narval << " Midas: " << run_midas << endl;
     }
     
     // close file
     file.close();
 }
+
 
 void ReadNMRForRun(int RunNumber, TGraph *graphy)
 {
@@ -382,7 +385,7 @@ void ReadNMRForRun(int RunNumber, TGraph *graphy)
     
     cout << "RunNumber: " << RunNumber << endl;
     
-    //     int narvalRun = m_NarvalMidasTable.find(RunNumber)->second;
+    int narvalRun = m_NarvalMidasTable.find(RunNumber)->second;
     map<int,int>::iterator it;
     int key = -1;
     for(it = m_NarvalMidasTable.begin(); it != m_NarvalMidasTable.end();it++)
@@ -392,11 +395,11 @@ void ReadNMRForRun(int RunNumber, TGraph *graphy)
             key = it->first;
         }
     }
-    int narvalRun = key;
+    narvalRun = key;
     
     cout << "Narval Run Number: " << narvalRun << endl;
     
-    sprintf(buffer,"/home/padsley/data/19Fpp/rmn/Data_run%d.dat",narvalRun);
+    sprintf(buffer,"../rmn/Data_%d.dat",narvalRun);
     
     input.open(buffer);
     

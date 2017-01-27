@@ -234,7 +234,7 @@ Int_t ProcessRuns::Cut(Long64_t entry)
 void ReadTimeTable();
 
 map<Int_t, pair<TTimeStamp, TTimeStamp> > m_TimeTable;
-// map<Int_t, TSplitPoleNMR*> m_NMRTable;
+//map<Int_t, TSplitPoleNMR*> m_NMRTable;
 map<Int_t, Int_t> m_NarvalMidasTable;
 TTimeStamp m_RunStart, m_RunStop;
 double m_RunLength;
